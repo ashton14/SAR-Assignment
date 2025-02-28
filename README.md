@@ -15,6 +15,7 @@ The Health Assessor Agent demonstrates strong health/medical assessment capabili
 
 ### Modifications
 - Added more detailed documentation to explain the input and output of each function with an example use case.
+- Added a function to extract allergies from a medical history form
 - Modified the prompts being sent to Google Gemeni API for a more concise return value.
 - Added a necessary package to requirements.txt
 - Added instructions for API key in README
