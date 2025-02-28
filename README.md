@@ -60,7 +60,6 @@ pip install -e .
 
 4. Configure environment variables:
 
-    ```
 #### Google Gemini:
 - Obtain required API keys:
   1. ``` pip install google-generativeai ```
