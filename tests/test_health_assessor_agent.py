@@ -55,6 +55,22 @@ class TestHealthAssessorAgent:
         assert "conditions" in response
 
 
+    def test_extract_allergies(self, agent):
+        form = "Sarah, a 42-year-old woman, has been struggling with a combination \
+            of high blood pressure and frequent migraines. Her blood pressure readings \
+            consistently hover around 150/95 mmHg, placing her in the stage 2 \
+            hypertension category. These elevated readings often coincide with \
+            the onset of her migraines, which she experiences at least twice \
+            a week. She is allergic to penicillin. \
+            Sarah's migraines are characterized by throbbing pain on one side of\
+            her head, accompanied by nausea, sensitivity to light and sound, and \
+            visual disturbances like flashing lights. The migraines typically last \
+            for several hours, significantly disrupting her daily activities and \
+            causing considerable distress."
+        response = agent.extract_allergies(form)
+        assert "allergies" in response
+
+
     def test_status_update(self, agent):
         response = agent.update_status("active")
         assert response["new_status"] == "active"

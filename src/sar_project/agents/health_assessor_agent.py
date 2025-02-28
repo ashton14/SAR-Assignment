@@ -1,17 +1,12 @@
 from sar_project.agents.base_agent import SARBaseAgent
 import os
-#from openai import OpenAI
 import google.generativeai as genai
 
 from dotenv import load_dotenv
-#import flaml.automl
 import sys
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
-#client = OpenAI(api_key=api_key)
-#api_key = os.getenv("OPENAI_API_KEY")
 
 # Add the `src` directory to sys.path to allow relative imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
@@ -30,12 +25,6 @@ class HealthAssessorAgent(SARBaseAgent):
             5. Extract medical conditions from medical history"""
         )
 
-    # def query_openai(self, prompt, model="gpt-3.5-turbo", max_tokens=100):
-        
-    #     response = client.chat.completions.create(model=model,
-    #     messages=[{"role": "user", "content": prompt}],
-    #     max_tokens=max_tokens)
-    #     return response.choices[0].message.content
 
 #Only works with python version > 3.10
     def query_gemini(self, prompt, model="gemini-pro", max_tokens=200):
@@ -66,7 +55,14 @@ class HealthAssessorAgent(SARBaseAgent):
 
 
     def assess_health_risks(self, conditions):
-        """Assess likely current health risks of missing person"""
+        """Assess likely current health risks of missing person
+           Input: List of medical/health conditions
+           Output: Potential health risks or problems that can be caused
+                   by the listed conditions.
+                   
+            ex. [High blood pressure, athsma] ->
+                    Lightheadedness, shortness of breath, fainting
+        """
 
         result = {}
 
@@ -80,7 +76,12 @@ class HealthAssessorAgent(SARBaseAgent):
     
 
     def get_medications(self, injury):
-        """Get medications necessary for treatment"""
+        """Get medications necessary for treatment
+           Input: An injury
+           Output: Medications that can be used to treat the listed injury.
+
+           ex. open cut wound ->  Bacitracin, Tylenol, Aquaphor
+        """
 
         prompt = f"Give me a list of medications required to treat {injury} \
                     in a comma-separated list."
@@ -92,7 +93,16 @@ class HealthAssessorAgent(SARBaseAgent):
 
 
     def assess_urgency(self, injury):
-        """Assess urgency of treatment"""
+        """Assess urgency of treatment
+           Input: An injury
+           Output: The urgency of treating the injury as one of the following:
+                   1) extremely urgent
+                   2) fairly urgent
+                   3) minor urgency
+                   4)not urgent
+                   
+            ex. Gunshot wound -> Extremely urgent
+           """
 
         prompt = f"Tell me the urgency of treatment for a {injury} \
             as either extremely urgent, fairly urgent, minor urgency, \
@@ -104,14 +114,25 @@ class HealthAssessorAgent(SARBaseAgent):
         }
     
     def evaluate_mobility(self, conditions):
-        """Assess mobility of the missing person based on medical conditions"""
+        """Assess mobility of the missing person based on medical conditions
+           Input: A list of medical/health conditions
+           Output: The potential mobility of the person given the conditions
+                   as one of the following: 
+                   1) immobile
+                   2) slightly mobile
+                   3) fairly mobile
+                   4) very mobile
+
+           ex. [sprained ankle, athsma] -> slightly mobile
+                   
+        """
 
         result = {}
 
         conditions = ", ".join(conditions)
 
         prompt = f"based on these conditions, assess whether this person's mobility. \
-            only return either immobile, slightly mobile, fairly mobile, very mobile: \
+            return one of the following: immobile, slightly mobile, fairly mobile, very mobile: \
                 {conditions}"
         response = self.query_gemini(prompt)
 
@@ -119,8 +140,12 @@ class HealthAssessorAgent(SARBaseAgent):
             "mobility": response
         }
     
+
     def extract_medical_conditions(self, medical_history_form):
-        """Extract list of medical conditions given the person's medical history form"""
+        """Extract list of medical conditions given the person's medical history form
+           Input: A medical history form
+           Output: A concise list of medical conditions
+        """
 
         prompt = f"Extract a concise list of medical conditions/problems \
             from the given medical history form: {medical_history_form}"
@@ -130,6 +155,22 @@ class HealthAssessorAgent(SARBaseAgent):
             "conditions": response,
         }
 
+
+    def extract_allergies(self, medical_history_form):
+        """Extract list of allergies given the person's medical history form
+           Input: A medical history form
+           Output: A concise list of allergies
+        """
+
+        prompt = f"Extract a concise list of allergies \
+            from the given medical history form: {medical_history_form}"
+
+        response = self.query_gemini(prompt)  
+        return {
+            "allergies": response,
+        }
+    
+
     def update_status(self, status):
         """Update the agent's status"""
         self.status = status
@@ -138,7 +179,3 @@ class HealthAssessorAgent(SARBaseAgent):
     def get_status(self):
         """Get the agent's current status"""
         return getattr(self, "status", "unknown")
-
-# agent = HealthAssessorAgent()
-# response = agent.evaluate_mobility(["diabetes", "pneumonia"])
-# print(response)
