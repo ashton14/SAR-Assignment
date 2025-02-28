@@ -60,12 +60,6 @@ pip install -e .
 
 4. Configure environment variables:
 
-#### OpenAI:
-- Obtain required API keys:
-  1. OpenAI API key: Sign up at https://platform.openai.com/signup
-- Update your `.env` file with the following:
-    ```
-    OPENAI_API_KEY=your_openai_api_key_here
     ```
 #### Google Gemini:
 - Obtain required API keys:
