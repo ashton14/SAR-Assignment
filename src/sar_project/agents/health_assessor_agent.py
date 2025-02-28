@@ -12,6 +12,8 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
 
+# ALL FUNCTION OUTPUT IS IN JSON FORMAT
+
 class HealthAssessorAgent(SARBaseAgent):
     def __init__(self, name="health_assessor"):
         super().__init__(
