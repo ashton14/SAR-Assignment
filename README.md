@@ -10,6 +10,14 @@ Roles:
 4. Assess mobility of missing person
 5. Extract medical conditions from medical history
 
+### Insights
+The Health Assessor Agent demonstrates strong health/medical assessment capabilities with accurate and informative responses, effective handling of missing inputs, correct prioritization of urgency, logical responses for unknowns, and efficient code. However, improvements are needed in reducing excessive verbosity in mobility assessments, adding missing dependencies to requirements, clarifying testing instructions in the README, and enhancing input documentation in functions
+
+### Modifications
+- Added more detailed documentation to explain the input and output of each function with an example use case.
+- Modified the prompts being sent to Google Gemeni API for a more concise return value.
+- Added a necessary package to requirements.txt
+- Added instructions for API key in README
 
 # Search and Rescue (SAR) Agent Framework - CSC 581
 
@@ -65,10 +73,7 @@ pip install -e .
   1. ``` pip install google-generativeai ```
   2. ``` import google.generativeai as genai ```
   3. Google Gemini API Key: Obtain at https://aistudio.google.com/apikey
-- Configure with the following:
-  ```
-  genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-  ```
+  4. Add GOOGLE_API_KEY = "your_api_key" to .env file
 
 Make sure to keep your `.env` file private and never commit it to version control.
 
